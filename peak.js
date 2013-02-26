@@ -1,5 +1,5 @@
 var argv = require("optimist")
-    .usage("Compiles a .json file to JavaScript\nUsage: $0")
+    .usage("Peak - Heights Compiler\n\nCompiles a .json file to JavaScript\nUsage: $0")
     .demand(["s"])
     .alias('s', 'src')
     .describe('s', "The .json file to compile")
@@ -22,5 +22,41 @@ fs.readFile(file, function(err, data) {
 });
 
 function compile(source) {
-  console.log(source.hello);
+  var output = "";
+  output += parseVariables(source);
+  output += parseObjects(source);
+  console.log(output);
+}
+
+function parseVariables(source) {
+  var genCode = "";
+  for (var name in source.variables) {
+    genCode += "var " + name + " = " + source.variables[name] + ";\n";
+  }
+  genCode += "\n\n";
+  return genCode;
+}
+
+function parseObjects(source) {
+  var genCode = "";
+  for (var obj in source.objects) {
+    genCode += parseObject(source.objects[obj], obj);
+  }
+  return genCode;
+}
+
+function parseObject(obj, name) {
+  var genCode = "";
+  for (var func in obj) {
+    if (func == "constructor") {
+      genCode += "var " + name + " = function(x, y, id, params) {\n";
+      genCode += obj[func];
+    } else {
+      genCode += name + ".prototype." + func + " = function(" + obj[func][0] + ") {\n";
+      genCode += obj[func][1];
+    }
+    genCode += "\n};\n\n";
+    
+  }
+  return genCode;
 }

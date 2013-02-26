@@ -1,3 +1,20 @@
 {
-  "hello": "world"
+  "variables" : {
+    "camera": "new Camera()",
+    "level" : "1",
+    "shirt" : "\"pinkArgyleSweater\""
+  },
+  "objects" : {
+    "Camera" : {
+      "constructor" : "this.x = x; this.y = y; this.id = id;",
+      "step" : [
+        "",
+        "this.x += 1;"
+      ],
+      "anotherFunction" : [
+        "amt",
+        "this.x -= amt;"
+      ]
+    }
+  }
 }
