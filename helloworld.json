@@ -5,8 +5,8 @@
     "shirt" : "\"pinkArgyleSweater\""
   },
   "objects" : {
-    "Camera" : {
-      "constructor" : "this.x = x; this.y = y; this.id = id;",
+    "HelloWorld" : {
+      "constructor" : "this.x = x; this.y = y; this.id = id; this.message = \"Hello, World!\";",
       "functions" : {
         "step" : [
           "",
@@ -18,7 +18,7 @@
         ]
       },
       "collisions" : {
-        
+        "AnObject" : "this.x += 100"
       }
     }
   }

@@ -16,6 +16,9 @@ var argv = require("optimist")
 // More imports.
 var fs = require("fs");
 var log = require("winston");
+var jsp = require("uglify-js").parser;
+var pro = require("uglify-js").uglify;
+
 
 // Read in file.
 var file = __dirname + "/" + argv.s;
@@ -51,6 +54,10 @@ function compile(source) {
  */
 function outputFile(code) {
   
+  if (argv.m) {
+    code = compress(code);
+  }
+  
   // Get execution time.
   var end = new Date();
   var time = (end - start) / 1000;
@@ -62,6 +69,17 @@ function outputFile(code) {
         log.info("Compiled successfully in " + time + "s and written to " + argv.o);
     }
   }); 
+}
+
+
+/**
+ * Compresses the passed in code using UglifyJS
+ */
+function compress(orig_code) {
+  var ast = jsp.parse(orig_code);
+  ast = pro.ast_mangle(ast);
+  ast = pro.ast_squeeze(ast);
+  return pro.gen_code(ast);
 }
 
 
@@ -114,6 +132,11 @@ function parseObject(obj, name) {
     functions += name + ".prototype." + func + " = function(" + obj.functions[func][0] + ") {\n";
     functions += obj.functions[func][1];
     functions += "\n};\n\n";
+  }
+  
+  // Collisions.
+  if (obj.hasOwnProperty("collisions")) {
+    constructor += "collideable(this);\n";
   }
   
   // Close out constructor.
