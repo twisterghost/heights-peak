@@ -9,12 +9,16 @@ var argv = require("optimist")
     .alias('f', 'full')
     .describe('f', "Compile to complete single JS file including engine code")
     .argv;
-    
+
 // More imports.
 var fs = require("fs");
 var log = require("winston");
 var jsp = require("uglify-js").parser;
 var pro = require("uglify-js").uglify;
+
+console.log("Peak.js v1.0.0 - Compile JSON heights sources to JavaScript");
+console.log("Visit http://heightsjs.com for more information.");
+console.log("Licenced under the MIT open source licence.\n");
 
 if (process.argv[2] == null) {
   log.error("No source file specified.");
@@ -29,7 +33,7 @@ var start = new Date();
 
 // Default to file name if needed.
 if (argv.o == "DEFAULT") {
-  argv.o = process.argv[2].replace(".json", ".js"); 
+  argv.o = process.argv[2].replace(".json", ".js");
 }
 
 // Read the input file and begin compilation.
@@ -43,6 +47,7 @@ fs.readFile(file, function(err, data) {
  * Driver function for compilation.
  */
 function compile(source) {
+  log.info("Compiling...");
   var output = "";
   output += parseVariables(source);
   output += parseObjects(source);
@@ -54,22 +59,22 @@ function compile(source) {
  * Outputs the generated code to a file.
  */
 function outputFile(code) {
-  
+
   if (argv.m) {
     code = compress(code);
   }
-  
+
   // Get execution time.
   var end = new Date();
   var time = (end - start) / 1000;
-  
+  log.info("Saving...");
   fs.writeFile(argv.o, code, function(err) {
     if(err) {
         log.error(err);
     } else {
         log.info("Compiled successfully in " + time + "s and written to " + argv.o);
     }
-  }); 
+  });
 }
 
 
@@ -77,6 +82,7 @@ function outputFile(code) {
  * Compresses the passed in code using UglifyJS
  */
 function compress(orig_code) {
+  log.info("Minifying...");
   var ast = jsp.parse(orig_code);
   ast = pro.ast_mangle(ast);
   ast = pro.ast_squeeze(ast);
@@ -113,37 +119,37 @@ function parseObjects(source) {
  * Parses a single object.
  */
 function parseObject(obj, name) {
-  
+
   // Initialize parts to fill out.
   var functions = "";
   var constructor = "";
-  
+
   // Check that the constructor exists.
   if (!obj.hasOwnProperty("constructor")) {
     log.error("Error in compiling object " + name + ": No constructor found.");
     process.exit(0);
   }
-  
+
   // Begin generation of constructor. We leave it open to add more to it if needed.
   constructor += "var " + name + " = function(x, y, id, params) {\n";
   constructor += obj.constructor;
-  
+
   // Loop through functions.
   for (var func in obj.functions) {
     functions += name + ".prototype." + func + " = function(" + obj.functions[func][0] + ") {\n";
     functions += obj.functions[func][1];
     functions += "\n};\n\n";
   }
-  
+
   // Collisions.
   if (obj.hasOwnProperty("collisions")) {
     constructor += "collideable(this);";
     functions += parseCollisions(obj, name);
   }
-  
+
   // Close out constructor.
   constructor += "\n};\n\n";
-  
+
   var code = constructor + functions;
   return code;
 }
@@ -153,7 +159,7 @@ function parseCollisions(obj, name) {
   var genCode = "";
   var useElse = false;
   genCode = name + ".prototype.onCollision = function(other) {\n";
-  
+
   // Loop through each collision.
   for (var collision in obj.collisions) {
     if (useElse) genCode += "else ";
@@ -162,7 +168,7 @@ function parseCollisions(obj, name) {
     genCode += "\n}\n";
     useElse = true;
   }
-  
+
   genCode += "\n};\n\n";
   return genCode;
 }

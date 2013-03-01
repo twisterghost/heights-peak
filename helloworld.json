@@ -1,6 +1,5 @@
 {
   "variables" : {
-    "camera": "new Camera()",
     "level" : "1",
     "shirt" : "\"pinkArgyleSweater\""
   },
