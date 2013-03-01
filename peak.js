@@ -1,9 +1,6 @@
 // Set up arguments and usage.
 var argv = require("optimist")
     .usage("Peak - Heights Compiler\n\nCompiles a .json file to JavaScript\nUsage: $0")
-    .demand(["s"])
-    .alias('s', 'src')
-    .describe('s', "The .json file to compile")
     .alias('o', 'out')
     .default('o', "DEFAULT")
     .describe('o', "Output filename")
@@ -19,16 +16,20 @@ var log = require("winston");
 var jsp = require("uglify-js").parser;
 var pro = require("uglify-js").uglify;
 
+if (process.argv[2] == null) {
+  log.error("No source file specified.");
+  process.exit(0);
+}
 
 // Read in file.
-var file = __dirname + "/" + argv.s;
+var file = __dirname + "/" + process.argv[2];
 
 // Get start time for execution time evaluation.
 var start = new Date();
 
 // Default to file name if needed.
 if (argv.o == "DEFAULT") {
-  argv.o = argv.s.replace(".json", ".js"); 
+  argv.o = process.argv[2].replace(".json", ".js"); 
 }
 
 // Read the input file and begin compilation.
@@ -136,7 +137,8 @@ function parseObject(obj, name) {
   
   // Collisions.
   if (obj.hasOwnProperty("collisions")) {
-    constructor += "collideable(this);\n";
+    constructor += "collideable(this);";
+    functions += parseCollisions(obj, name);
   }
   
   // Close out constructor.
@@ -144,4 +146,23 @@ function parseObject(obj, name) {
   
   var code = constructor + functions;
   return code;
+}
+
+
+function parseCollisions(obj, name) {
+  var genCode = "";
+  var useElse = false;
+  genCode = name + ".prototype.onCollision = function(other) {\n";
+  
+  // Loop through each collision.
+  for (var collision in obj.collisions) {
+    if (useElse) genCode += "else ";
+    genCode += "if (other instanceof " + collision + ") {\n";
+    genCode += obj.collisions[collision];
+    genCode += "\n}\n";
+    useElse = true;
+  }
+  
+  genCode += "\n};\n\n";
+  return genCode;
 }

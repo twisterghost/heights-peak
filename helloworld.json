@@ -6,7 +6,7 @@
   },
   "objects" : {
     "HelloWorld" : {
-      "constructor" : "this.x = x; this.y = y; this.id = id; this.message = \"Hello, World!\";",
+      "constructor" : "this.x = x;\nthis.y = y;\nthis.id = id;\nthis.message = \"Hello, World!\";\n",
       "functions" : {
         "step" : [
           "",
@@ -18,7 +18,9 @@
         ]
       },
       "collisions" : {
-        "AnObject" : "this.x += 100"
+        "AnObject" : "this.x += 100;",
+        "AnotherObject" : "this.y += 100;",
+        "AThirdObject" : "destroyInstance(this);"
       }
     }
   }
