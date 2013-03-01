@@ -7,14 +7,19 @@
   "objects" : {
     "Camera" : {
       "constructor" : "this.x = x; this.y = y; this.id = id;",
-      "step" : [
-        "",
-        "this.x += 1;"
-      ],
-      "anotherFunction" : [
-        "amt",
-        "this.x -= amt;"
-      ]
+      "functions" : {
+        "step" : [
+          "",
+          "this.x += 1;"
+        ],
+        "anotherFunction" : [
+          "amt",
+          "this.x -= amt;"
+        ]
+      },
+      "collisions" : {
+        
+      }
     }
   }
 }

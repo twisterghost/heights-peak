@@ -19,6 +19,7 @@
   "readmeFilename": "README.md",
   "gitHead": "6a64aa4ab89e8007f1680b9bf8e8647789416170",
   "dependencies": {
-    "optimist": "~0.3.5"
+    "optimist": "~0.3.5",
+    "winston": "~0.6.2"
   }
 }
