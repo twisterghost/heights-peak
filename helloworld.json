@@ -19,7 +19,8 @@
       "collisions" : {
         "AnObject" : "this.x += 100;",
         "AnotherObject" : "this.y += 100;",
-        "AThirdObject" : "destroyInstance(this);"
+        "AThirdObject" : "destroyInstance(this);",
+        "GoodMeasure" : "destroyInstance(this);"
       }
     }
   }

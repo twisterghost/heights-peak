@@ -16,6 +16,15 @@ var log = require("winston");
 var jsp = require("uglify-js").parser;
 var pro = require("uglify-js").uglify;
 
+// Define templates.
+var variableAssignment = "var {name} = {value};\n";
+var objectFunction = "{object}.prototype.{funcName} = function({params}) {\n" +
+                     "{code}\n" +
+                     "};\n\n";
+
+/**
+ * BEGIN MAIN CODE
+ */
 console.log("Peak.js v1.0.0 - Compile JSON heights sources to JavaScript");
 console.log("Visit http://heightsjs.com for more information.");
 console.log("Licenced under the MIT open source licence.\n");
@@ -42,6 +51,9 @@ fs.readFile(file, function(err, data) {
   compile(JSON.parse(data));
 });
 
+/**
+ * BEGIN FUNCTION DEFINITIONS
+ */
 
 /**
  * Driver function for compilation.
@@ -52,6 +64,17 @@ function compile(source) {
   output += parseVariables(source);
   output += parseObjects(source);
   outputFile(output);
+}
+
+
+/**
+ * Renders the template replacing the passed variables.
+ */
+function render(template, variables) {
+  for (var replace in variables) {
+    template = template.replace("{" + replace + "}", variables[replace]);
+  }
+  return template;
 }
 
 
@@ -96,7 +119,7 @@ function compress(orig_code) {
 function parseVariables(source) {
   var genCode = "";
   for (var name in source.variables) {
-    genCode += "var " + name + " = " + source.variables[name] + ";\n";
+    genCode += render(variableAssignment, {"name":name, "value":source.variables[name]});
   }
   genCode += "\n\n";
   return genCode;
@@ -136,9 +159,15 @@ function parseObject(obj, name) {
 
   // Loop through functions.
   for (var func in obj.functions) {
-    functions += name + ".prototype." + func + " = function(" + obj.functions[func][0] + ") {\n";
+    functions += render(objectFunction, {
+        "object" : name,
+        "funcName" : func,
+        "params" : obj.functions[func][0],
+        "code" : obj.functions[func][1]
+    });
+    /*functions += name + ".prototype." + func + " = function(" + obj.functions[func][0] + ") {\n";
     functions += obj.functions[func][1];
-    functions += "\n};\n\n";
+    functions += "\n};\n\n";*/
   }
 
   // Collisions.
