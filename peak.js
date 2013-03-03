@@ -1,13 +1,5 @@
 // Set up arguments and usage.
 var argv = require("optimist")
-    .usage("Peak - Heights Compiler\n\nCompiles a .json file to JavaScript\nUsage: $0")
-    .alias('o', 'out')
-    .default('o', "DEFAULT")
-    .describe('o', "Output filename")
-    .alias('m', 'min')
-    .describe('m', "Minify compiled JS")
-    .alias('f', 'full')
-    .describe('f', "Compile to complete single JS file including engine code")
     .argv;
 
 // More imports.
@@ -32,10 +24,23 @@ console.log("Peak.js v1.0.0 - Compile JSON heights sources to JavaScript");
 console.log("Visit http://heightsjs.com for more information.");
 console.log("Licenced under the MIT open source licence.\n");
 
-if (process.argv[2] == null) {
-  log.error("No source file specified.");
+if (process.argv[2] == "help" || process.argv[2] == null) {
+      
+    require("optimist")
+    .usage("Peak - Heights Compiler\n\nCompiles a .json file to JavaScript\nUsage: node peak SOURCEFILE [options]")
+    .boolean(['f', 'm'])
+    .alias('o', 'out')
+    .default('o', "DEFAULT")
+    .describe('o', "Output filename")
+    .alias('m', 'min')
+    .describe('m', "Minify compiled JS")
+    .alias('f', 'full')
+    .describe('f', "Compile to complete single JS file including engine code")
+    .showHelp();
   process.exit(0);
 }
+
+
 
 // Read in file.
 var file = __dirname + "/" + process.argv[2];

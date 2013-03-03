@@ -1,6 +1,6 @@
 {
   "name": "peak",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Compile .json Heights source files into JS",
   "main": "peak.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "Peak"
   ],
   "author": "Michael Barrett",
-  "license": "BSD",
+  "license": "MIT",
   "readmeFilename": "README.md",
   "gitHead": "6a64aa4ab89e8007f1680b9bf8e8647789416170",
   "dependencies": {
