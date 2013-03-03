@@ -21,6 +21,9 @@ var variableAssignment = "var {name} = {value};\n";
 var objectFunction = "{object}.prototype.{funcName} = function({params}) {\n" +
                      "{code}\n" +
                      "};\n\n";
+var keyInput = "if (getKeyPressed(input) == \"{key}\") {\n" + 
+               "{code}\n" + 
+               "}\n";
 
 /**
  * BEGIN MAIN CODE
@@ -102,7 +105,7 @@ function outputFile(code) {
 
 
 /**
- * Compresses the passed in code using UglifyJS
+ * Compresses the passed in code using UglifyJS.
  */
 function compress(orig_code) {
   log.info("Minifying...");
@@ -172,8 +175,14 @@ function parseObject(obj, name) {
 
   // Collisions.
   if (obj.hasOwnProperty("collisions")) {
-    constructor += "collideable(this);";
+    constructor += "collideable(this);\n";
     functions += parseCollisions(obj, name);
+  }
+  
+  // Inputs.
+  if (obj.hasOwnProperty("inputs")) {
+    constructor += "inputHook(this);\n";
+    functions += parseInputs(obj, name);
   }
 
   // Close out constructor.
@@ -184,6 +193,9 @@ function parseObject(obj, name) {
 }
 
 
+/**
+ * Parse collision evnets from objects.
+ */
 function parseCollisions(obj, name) {
   var genCode = "";
   var useElse = false;
@@ -199,5 +211,48 @@ function parseCollisions(obj, name) {
   }
 
   genCode += "\n};\n\n";
+  return genCode;
+}
+
+
+/**
+ * Parses input events
+ */
+function parseInputs(obj, name) {
+  var keyDowns = "if (getInputType(input) == \"keydown\") {\n";
+  var keyUps = "if (getInputType(input) == \"keyup\") {\n";
+  var mouseDowns = "if (getInputType(input) == \"mousedown\") {\n";
+  var mouseUps = "if (getInputType(input) == \"mouseup\") {\n";
+  var genCode = "";
+  var useKeyDown = false;
+  var useKeyUp = false;
+  var useMouseDown = false;
+  var useMouseUp = false;
+  
+  // Loop through each collision.
+  for (var input in obj.inputs) {
+    if (input == "keydown") {
+      useKeyDown = true;
+      keyDowns += render(keyInput, {"key" : obj.inputs[input][0], "code" : obj.inputs[input][1]});
+    }
+    if (input == "keyup") {
+      useKeyUp = true;
+      keyUps += render(keyInput, {"key" : obj.inputs[input][0], "code" : obj.inputs[input][1]});
+    }
+  }
+
+  var genInputs = "";
+  if (useKeyDown) {
+    keyDowns += "\n}\n\n";
+    genInputs += keyDowns;
+  }  
+  if (useKeyUp) {
+    keyUps += "\n}\n\n";
+    genInputs += keyUps;
+  }
+  
+  genCode += render(objectFunction, {"object" : name, "funcName" : "handleInput",
+                                     "params" : "input", "code" : genInputs});
+  
   return genCode;
 }

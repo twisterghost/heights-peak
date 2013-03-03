@@ -21,6 +21,10 @@
         "AnotherObject" : "this.y += 100;",
         "AThirdObject" : "destroyInstance(this);",
         "GoodMeasure" : "destroyInstance(this);"
+      },
+      "inputs" : {
+        "keydown" : ["UP", "y -= 2;"],
+        "keyup" : ["SPACE", "x = 10;"]
       }
     }
   }
