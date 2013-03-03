@@ -239,6 +239,14 @@ function parseInputs(obj, name) {
       useKeyUp = true;
       keyUps += render(keyInput, {"key" : obj.inputs[input][0], "code" : obj.inputs[input][1]});
     }
+    if (input == "mousedown") {
+      mouseDowns += obj.inputs[input];
+      useMouseDown = true;
+    }
+    if (input == "mouseup") {
+      mouseUps += obj.inputs[input];
+      useMouseUp = true;
+    }
   }
 
   var genInputs = "";
@@ -249,6 +257,14 @@ function parseInputs(obj, name) {
   if (useKeyUp) {
     keyUps += "\n}\n\n";
     genInputs += keyUps;
+  }
+  if (useMouseDown) {
+    mouseDowns += "\n}\n\n";
+    genInputs += mouseDowns;
+  }
+  if (useMouseUp) {
+    mouseUps += "\n}\n\n";
+    genInputs += mouseUps;
   }
   
   genCode += render(objectFunction, {"object" : name, "funcName" : "handleInput",
