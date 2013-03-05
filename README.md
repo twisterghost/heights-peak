@@ -17,7 +17,7 @@ Peak source files are not intended to be written directly, though it is entirely
 `-m, --min` Minify the output code.
 `-f, --full` Include the Heights engine in the output file.
 
-## Sourcefule spec
+## Sourcefile spec
 **NOTE: Peak is still in early development, this spec is NOT complete.**
 ```javascript
 {
