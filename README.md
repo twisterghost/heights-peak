@@ -14,7 +14,9 @@ Peak source files are not intended to be written directly, though it is entirely
 
 ## Options
 `-o, --out` Specify the output filename.
+
 `-m, --min` Minify the output code.
+
 `-f, --full` Include the Heights engine in the output file.
 
 ## Sourcefile spec
