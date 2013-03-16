@@ -1,5 +1,7 @@
 // Set up arguments and usage.
 var argv = require("optimist")
+    .alias("o", "out")
+    .default("o", "DEFAULT")
     .argv;
 
 // More imports.
