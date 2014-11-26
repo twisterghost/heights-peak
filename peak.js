@@ -1,5 +1,4 @@
 var fs = require("fs");
-var log = require("winston");
 var jsp = require("uglify-js").parser;
 var pro = require("uglify-js").uglify;
 
@@ -21,9 +20,9 @@ var keyInput = "if (getKeyPressed(input) == \"{key}\") {\n" +
 /**
  * BEGIN MAIN CODE
  */
-console.log("Peak.js v1.0.0 - Compile JSON heights sources to JavaScript");
-console.log("Visit http://heightsjs.com for more information.");
-console.log("Licenced under the MIT open source licence.\n");
+console.info("Peak.js v1.0.0 - Compile JSON heights sources to JavaScript");
+console.info("Visit http://heightsjs.com for more information.");
+console.info("Licenced under the MIT open source licence.\n");
 
 if (process.argv[2] == "help" || process.argv[2] == null) {
 
@@ -69,7 +68,7 @@ fs.readFile(file, function(err, data) {
  * Driver function for compilation.
  */
 function compile(source) {
-  log.info("Compiling...");
+  console.info("Compiling...");
   var output = "";
   output += parseVariables(source);
   output += parseObjects(source);
@@ -100,12 +99,12 @@ function outputFile(code) {
   // Get execution time.
   var end = new Date();
   var time = (end - start) / 1000;
-  log.info("Saving...");
+  console.info("Saving...");
   fs.writeFile(argv.o, code, function(err) {
     if(err) {
-        log.error(err);
+        console.error(err);
     } else {
-        log.info("Compiled successfully in " + time + "s and written to " +
+        console.info("Compiled successfully in " + time + "s and written to " +
             argv.o);
     }
   });
@@ -116,7 +115,7 @@ function outputFile(code) {
  * Compresses the passed in code using UglifyJS.
  */
 function compress(orig_code) {
-  log.info("Minifying...");
+  console.info("Minifying...");
   var ast = jsp.parse(orig_code);
   ast = pro.ast_mangle(ast);
   ast = pro.ast_squeeze(ast);
@@ -163,7 +162,7 @@ function parseObject(obj, name) {
 
   // Check that the constructor exists.
   if (!obj.hasOwnProperty("constructor")) {
-    log.error("Error in compiling object " + name + ": No constructor found.");
+    console.error("Error in compiling object " + name + ": No constructor found.");
     process.exit(0);
   }
 
