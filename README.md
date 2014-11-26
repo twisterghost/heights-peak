@@ -1,3 +1,5 @@
+**This repo is no longer maintained, but was revived and edited in a redux branch. See what it would have looked like if it were made more recently [here](https://github.com/twisterghost/heights-peak/tree/redux).**
+
 # Peak
 A compiler for Heights
 
