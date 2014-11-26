@@ -25,8 +25,8 @@
       "inputs" : {
         "keydown" : ["UP", "y -= 2;"],
         "keyup" : ["SPACE", "x = 10;"],
-        "mousedown" : "alert(\"hi!\");",
-        "mouseup" : "// TODO"
+        "mousedown" : "alert('hi!');",
+        "mouseup" : "alert('hola');"
       }
     }
   }

@@ -1,18 +1,17 @@
+var fs = require("fs");
+var log = require("winston");
+var jsp = require("uglify-js").parser;
+var pro = require("uglify-js").uglify;
+
 // Set up arguments and usage.
 var argv = require("optimist")
     .alias("o", "out")
     .default("o", "DEFAULT")
     .argv;
 
-// More imports.
-var fs = require("fs");
-var log = require("winston");
-var jsp = require("uglify-js").parser;
-var pro = require("uglify-js").uglify;
-
 // Define templates.
 var variableAssignment = "var {name} = {value};\n";
-var objectFunction = "{object}.prototype.{funcName} = function({params}) {\n" +
+var objectFunction = "this.{funcName} = function({params}) {\n" +
                      "{code}\n" +
                      "};\n\n";
 var keyInput = "if (getKeyPressed(input) == \"{key}\") {\n" +
@@ -195,11 +194,11 @@ function parseObject(obj, name) {
     functions += parseInputs(obj, name);
   }
 
+  constructor += functions;
+
   // Close out constructor.
   constructor += "\n};\n\n";
-
-  var code = constructor + functions;
-  return code;
+  return constructor;
 }
 
 
@@ -209,7 +208,7 @@ function parseObject(obj, name) {
 function parseCollisions(obj, name) {
   var genCode = "";
   var useElse = false;
-  genCode = name + ".prototype.onCollision = function(other) {\n";
+  genCode = "this.onCollision = function(other) {\n";
 
   // Loop through each collision.
   for (var collision in obj.collisions) {
