@@ -15,8 +15,8 @@ var variableAssignment = "var {name} = {value};\n";
 var objectFunction = "{object}.prototype.{funcName} = function({params}) {\n" +
                      "{code}\n" +
                      "};\n\n";
-var keyInput = "if (getKeyPressed(input) == \"{key}\") {\n" + 
-               "{code}\n" + 
+var keyInput = "if (getKeyPressed(input) == \"{key}\") {\n" +
+               "{code}\n" +
                "}\n";
 
 /**
@@ -27,9 +27,10 @@ console.log("Visit http://heightsjs.com for more information.");
 console.log("Licenced under the MIT open source licence.\n");
 
 if (process.argv[2] == "help" || process.argv[2] == null) {
-      
+
     require("optimist")
-    .usage("Peak - Heights Compiler\n\nCompiles a .json file to JavaScript\nUsage: node peak SOURCEFILE [options]")
+    .usage("Peak - Heights Compiler\n\nCompiles a .json file to JavaScript\n" +
+        "Usage: node peak SOURCEFILE [options]")
     .boolean(['f', 'm'])
     .alias('o', 'out')
     .default('o', "DEFAULT")
@@ -105,7 +106,8 @@ function outputFile(code) {
     if(err) {
         log.error(err);
     } else {
-        log.info("Compiled successfully in " + time + "s and written to " + argv.o);
+        log.info("Compiled successfully in " + time + "s and written to " +
+            argv.o);
     }
   });
 }
@@ -129,7 +131,10 @@ function compress(orig_code) {
 function parseVariables(source) {
   var genCode = "";
   for (var name in source.variables) {
-    genCode += render(variableAssignment, {"name":name, "value":source.variables[name]});
+    genCode += render(variableAssignment, {
+      "name":name,
+      "value":source.variables[name]
+    });
   }
   genCode += "\n\n";
   return genCode;
@@ -163,7 +168,8 @@ function parseObject(obj, name) {
     process.exit(0);
   }
 
-  // Begin generation of constructor. We leave it open to add more to it if needed.
+  // Begin generation of constructor. We leave it open to add more to it if
+  // needed.
   constructor += "var " + name + " = function(x, y, id, params) {\n";
   constructor += obj.constructor;
 
@@ -175,9 +181,6 @@ function parseObject(obj, name) {
         "params" : obj.functions[func][0],
         "code" : obj.functions[func][1]
     });
-    /*functions += name + ".prototype." + func + " = function(" + obj.functions[func][0] + ") {\n";
-    functions += obj.functions[func][1];
-    functions += "\n};\n\n";*/
   }
 
   // Collisions.
@@ -185,7 +188,7 @@ function parseObject(obj, name) {
     constructor += "collideable(this);\n";
     functions += parseCollisions(obj, name);
   }
-  
+
   // Inputs.
   if (obj.hasOwnProperty("inputs")) {
     constructor += "inputHook(this);\n";
@@ -235,16 +238,20 @@ function parseInputs(obj, name) {
   var useKeyUp = false;
   var useMouseDown = false;
   var useMouseUp = false;
-  
+
   // Loop through each collision.
   for (var input in obj.inputs) {
     if (input == "keydown") {
       useKeyDown = true;
-      keyDowns += render(keyInput, {"key" : obj.inputs[input][0], "code" : obj.inputs[input][1]});
+      keyDowns += render(keyInput, {
+        "key" : obj.inputs[input][0], "code" : obj.inputs[input][1]
+      });
     }
     if (input == "keyup") {
       useKeyUp = true;
-      keyUps += render(keyInput, {"key" : obj.inputs[input][0], "code" : obj.inputs[input][1]});
+      keyUps += render(keyInput, {
+        "key" : obj.inputs[input][0], "code" : obj.inputs[input][1]
+      });
     }
     if (input == "mousedown") {
       mouseDowns += obj.inputs[input];
@@ -260,7 +267,7 @@ function parseInputs(obj, name) {
   if (useKeyDown) {
     keyDowns += "\n}\n\n";
     genInputs += keyDowns;
-  }  
+  }
   if (useKeyUp) {
     keyUps += "\n}\n\n";
     genInputs += keyUps;
@@ -273,9 +280,13 @@ function parseInputs(obj, name) {
     mouseUps += "\n}\n\n";
     genInputs += mouseUps;
   }
-  
-  genCode += render(objectFunction, {"object" : name, "funcName" : "handleInput",
-                                     "params" : "input", "code" : genInputs});
-  
+
+  genCode += render(objectFunction, {
+    object : name,
+    funcName : "handleInput",
+    params : "input",
+    code : genInputs
+  });
+
   return genCode;
 }

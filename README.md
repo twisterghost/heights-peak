@@ -9,11 +9,17 @@ A compiler for Heights
 
 ## What?
 
-Peak is a system to take standardized JSON source files and generate full JavaScript files for the Heights game engine. Peak can minify and optimize the code, as well as include the Heights engine for a complete file which you can simply drop into a webpage.
+Peak is a system to take standardized JSON source files and generate full JavaScript files for the
+Heights game engine. Peak can minify and optimize the code, as well as include the Heights engine
+for a complete file which you can simply drop into a webpage.
 
-Peak source files are not intended to be written directly, though it is entirely possible. The idea for Peak is to provide automation for code generation from an easily manipulatable standard, allowing applications to help generate Heights games. See the source spec further down in this README.
+Peak source files are not intended to be written directly, though it is entirely possible. The idea
+for Peak is to provide automation for code generation from an easily manipulatable standard,
+allowing applications to help generate Heights games. See the source spec further down in this
+README.
 
-**NOTE: Peak is still in early, rapid development and is not intended for commercial use quite yet!**
+**NOTE: Peak is still in early, rapid development and is not intended for commercial use quite
+yet!**
 
 ## Usage
 `node peak SOURCEFILE`
