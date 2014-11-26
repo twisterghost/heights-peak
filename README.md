@@ -1,4 +1,10 @@
-# Peak
+# Peak [Redux Branch]
+
+**Redux:** After reading through some of my old repos, I've felt a strange combination of
+nostalgia and inspiration to rewrite my old projects using the conventions I have learned since
+their original debut. This branch is not likely to be finished, or to be used in place of the
+original, but rather serves as a "what if" branch for if this project were maintained today.
+
 A compiler for Heights
 
 ## What?
